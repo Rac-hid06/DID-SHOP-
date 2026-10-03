@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Produit</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<main>
+    <div class="card">
+        <h2 th:text="${produit.id == null} ? 'Nouveau produit' : 'Modifier le produit'"></h2>
+        <form th:action="@{/produits}" th:object="${produit}" method="post">
+            <input type="hidden" th:field="*{id}">
+
+            <label>Nom</label>
+            <input type="text" th:field="*{nom}">
+            <span class="erreur" th:if="${#fields.hasErrors('nom')}" th:errors="*{nom}"></span>
+
+            <label>Catégorie</label>
+            <select name="categorieId">
+                <option value="">-- Aucune --</option>
+                <option th:each="c : ${categories}" th:value="${c.id}" th:text="${c.nom}"
+                        th:selected="${categorieId != null and categorieId == c.id}"></option>
+            </select>
+
+            <label>Prix de vente (F CFA)</label>
+            <input type="number" step="any" th:field="*{prixVente}">
+            <span class="erreur" th:if="${#fields.hasErrors('prixVente')}" th:errors="*{prixVente}"></span>
+
+            <label>Stock</label>
+            <input type="number" th:field="*{stock}">
+            <span class="erreur" th:if="${#fields.hasErrors('stock')}" th:errors="*{stock}"></span>
+
+            <label>Seuil d'alerte</label>
+            <input type="number" th:field="*{seuilAlerte}">
+            <span class="erreur" th:if="${#fields.hasErrors('seuilAlerte')}" th:errors="*{seuilAlerte}"></span>
+
+            <button class="btn" type="submit">Enregistrer</button>
+            <a class="btn" th:href="@{/produits}" style="background:#6b7785">Annuler</a>
+        </form>
+    </div>
+</main>
+</body>
+</html>

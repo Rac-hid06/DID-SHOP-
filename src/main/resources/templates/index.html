@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tableau de bord</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<main>
+    <h1>Tableau de bord</h1>
+    <h2>Bienvenue, <span sec:authentication="name"></span></h2>
+
+    <div class="stats">
+        <div class="stat">
+            <div class="stat-label">Ventes du jour</div>
+            <div class="stat-value" th:text="${#numbers.formatDecimal(ventesJour, 1, 'WHITESPACE', 0, 'COMMA')} + ' F'"></div>
+        </div>
+        <div class="stat">
+            <div class="stat-label">Achats du jour</div>
+            <div class="stat-value" th:text="${achatsJour}"></div>
+        </div>
+        <div class="stat" sec:authorize="hasRole('GERANT')">
+            <div class="stat-label">Livraisons du jour</div>
+            <div class="stat-value" th:text="${livraisonsJour}"></div>
+        </div>
+        <div class="stat">
+            <div class="stat-label">Produits en stock faible</div>
+            <div class="stat-value" th:classappend="${!#lists.isEmpty(stockFaible)} ? 'alerte'" th:text="${#lists.size(stockFaible)}"></div>
+        </div>
+    </div>
+
+    <div class="card" style="margin-top:16px">
+        <h3>⚠ Stock faible</h3>
+        <table th:if="${!#lists.isEmpty(stockFaible)}">
+            <thead><tr><th>Produit</th><th>Stock</th><th>Seuil</th></tr></thead>
+            <tbody>
+            <tr th:each="p : ${stockFaible}">
+                <td th:text="${p.nom}"></td>
+                <td class="erreur" th:text="${p.stock}"></td>
+                <td th:text="${p.seuilAlerte}"></td>
+            </tr>
+            </tbody>
+        </table>
+        <p th:if="${#lists.isEmpty(stockFaible)}">Tous les stocks sont suffisants.</p>
+    </div>
+
+    <div class="card" style="margin-top:16px" sec:authorize="hasRole('GERANT')">
+        <h3>Top 5 des produits vendus (30 derniers jours)</h3>
+        <table th:if="${!#lists.isEmpty(topProduits)}">
+            <thead><tr><th>Produit</th><th>Quantité vendue</th></tr></thead>
+            <tbody>
+            <tr th:each="t : ${topProduits}">
+                <td th:text="${t[0]}"></td>
+                <td th:text="${t[1]}"></td>
+            </tr>
+            </tbody>
+        </table>
+        <p th:if="${#lists.isEmpty(topProduits)}">Aucune vente sur la période.</p>
+    </div>
+</main>
+</body>
+</html>

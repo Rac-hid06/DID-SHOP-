@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ticket de caisse</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<main>
+    <div class="ticket">
+        <h3 style="text-align:center; margin:0">BOUTIQUE</h3>
+        <p style="text-align:center; margin:4px 0">Ticket de caisse n° <span th:text="${achat.id}"></span></p>
+        <hr>
+        <div>Date : <span th:text="${#temporals.format(achat.dateAchat, 'dd/MM/yyyy HH:mm')}"></span></div>
+        <div>Caissier : <span th:text="${achat.utilisateur.identifiant}"></span></div>
+        <div th:if="${achat.client != null}">Client : <span th:text="${achat.client.nom}"></span></div>
+        <hr>
+        <table class="ticket-table">
+            <tr th:each="l : ${achat.lignes}">
+                <td>
+                    <span th:text="${l.produit.nom}"></span><br>
+                    <small th:text="${l.quantite + ' x ' + #numbers.formatDecimal(l.prixUnitaire, 1, 'WHITESPACE', 0, 'COMMA')}"></small>
+                </td>
+                <td style="text-align:right" th:text="${#numbers.formatDecimal(l.sousTotal, 1, 'WHITESPACE', 0, 'COMMA')}"></td>
+            </tr>
+        </table>
+        <hr>
+        <div style="display:flex; justify-content:space-between; font-weight:bold">
+            <span>TOTAL</span>
+            <span th:text="${#numbers.formatDecimal(achat.total, 1, 'WHITESPACE', 0, 'COMMA')} + ' F'"></span>
+        </div>
+        <hr>
+        <p style="text-align:center">Merci de votre visite !</p>
+    </div>
+    <div class="no-print" style="text-align:center">
+        <button class="btn" onclick="window.print()">🖨 Imprimer le ticket</button>
+        <a class="btn" th:href="@{/achats/nouveau}" style="background:#6b7785">Nouvel achat</a>
+    </div>
+</main>
+</body>
+</html>

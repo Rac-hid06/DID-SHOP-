@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Historique des achats</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<main>
+    <div class="card">
+        <h2>Historique des achats</h2>
+        <table>
+            <thead>
+            <tr><th>N°</th><th>Date</th><th>Client</th><th>Caissier</th><th>Total</th><th></th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="a : ${achats}">
+                <td th:text="${a.id}"></td>
+                <td th:text="${#temporals.format(a.dateAchat, 'dd/MM/yyyy HH:mm')}"></td>
+                <td th:text="${a.client != null ? a.client.nom : '-'}"></td>
+                <td th:text="${a.utilisateur.identifiant}"></td>
+                <td th:text="${#numbers.formatDecimal(a.total, 1, 'WHITESPACE', 0, 'COMMA')} + ' F'"></td>
+                <td><a th:href="@{/achats/{id}/ticket(id=${a.id})}">Ticket</a></td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(achats)}"><td colspan="6">Aucun achat enregistré</td></tr>
+            </tbody>
+        </table>
+        <a class="btn" th:href="@{/achats/nouveau}">Nouvel achat</a>
+    </div>
+</main>
+</body>
+</html>

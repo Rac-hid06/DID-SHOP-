@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Nouvel achat</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<main>
+    <div class="card">
+        <h2>Nouvel achat client</h2>
+        <p class="erreur" th:if="${erreur}" th:text="${erreur}"></p>
+        <form th:action="@{/achats}" method="post">
+            <label>Client (facultatif)</label>
+            <input type="text" name="clientNom" th:value="${clientNom}" placeholder="Nom du client">
+
+            <div id="lignes">
+                <div class="ligne" th:each="l : ${lignes}" style="display:flex; gap:8px; align-items:flex-end">
+                    <div style="flex:3">
+                        <label>Produit</label>
+                        <select name="produitId" required>
+                            <option value="">-- Choisir --</option>
+                            <option th:each="p : ${produits}" th:value="${p.id}" th:data-prix="${p.prixVente}"
+                                    th:disabled="${p.stock == 0}"
+                                    th:selected="${l.produitId != null and l.produitId == p.id}"
+                                    th:text="${p.nom + ' - ' + #numbers.formatDecimal(p.prixVente, 1, 'WHITESPACE', 0, 'COMMA') + ' F (stock : ' + p.stock + ')'}"></option>
+                        </select>
+                    </div>
+                    <div style="flex:1">
+                        <label>Qté</label>
+                        <input type="number" name="quantite" min="1" th:value="${l.quantite}" required>
+                    </div>
+                    <button type="button" class="btn" style="background:#b00020" onclick="retirer(this)">✕</button>
+                </div>
+            </div>
+
+            <button type="button" class="btn" style="background:#6b7785" onclick="ajouter()">+ Ajouter un produit</button>
+            <h3>Total : <span id="total">0</span> F</h3>
+            <button class="btn" type="submit">Valider l'achat</button>
+        </form>
+    </div>
+</main>
+<script>
+    const lignes = document.getElementById('lignes');
+    function recalc() {
+        let total = 0;
+        lignes.querySelectorAll('.ligne').forEach(function (r) {
+            const opt = r.querySelector('select').selectedOptions[0];
+            const qte = parseInt(r.querySelector('input').value) || 0;
+            if (opt && opt.dataset.prix) total += parseFloat(opt.dataset.prix) * qte;
+        });
+        document.getElementById('total').textContent = Math.round(total).toLocaleString('fr-FR');
+    }
+    function ajouter() {
+        const r = lignes.querySelector('.ligne').cloneNode(true);
+        r.querySelector('select').selectedIndex = 0;
+        r.querySelector('input').value = 1;
+        lignes.appendChild(r);
+        recalc();
+    }
+    function retirer(btn) {
+        if (lignes.querySelectorAll('.ligne').length > 1) {
+            btn.closest('.ligne').remove();
+            recalc();
+        }
+    }
+    lignes.addEventListener('input', recalc);
+    lignes.addEventListener('change', recalc);
+    recalc();
+</script>
+</body>
+</html>

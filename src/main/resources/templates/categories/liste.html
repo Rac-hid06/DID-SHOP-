@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Catégories</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<main>
+    <div class="card">
+        <h2>Catégories</h2>
+        <p class="succes" th:if="${succes}" th:text="${succes}"></p>
+        <p class="erreur" th:if="${erreur}" th:text="${erreur}"></p>
+        <form th:action="@{/categories}" method="post" style="display:flex; gap:8px">
+            <input type="text" name="nom" placeholder="Nouvelle catégorie (ex : Boissons)" required>
+            <button class="btn" type="submit" style="margin-top:4px">Ajouter</button>
+        </form>
+        <table style="margin-top:16px">
+            <thead><tr><th>Nom</th></tr></thead>
+            <tbody>
+            <tr th:each="c : ${categories}"><td th:text="${c.nom}"></td></tr>
+            <tr th:if="${#lists.isEmpty(categories)}"><td>Aucune catégorie</td></tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+</body>
+</html>

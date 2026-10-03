@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Historique des livraisons</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<main>
+    <div class="card">
+        <h2>Historique des livraisons</h2>
+        <table>
+            <thead>
+            <tr><th>N°</th><th>Date</th><th>Fournisseur</th><th>Enregistré par</th><th>Total</th><th></th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="l : ${livraisons}">
+                <td th:text="${l.id}"></td>
+                <td th:text="${#temporals.format(l.dateLivraison, 'dd/MM/yyyy HH:mm')}"></td>
+                <td th:text="${l.fournisseur.nom}"></td>
+                <td th:text="${l.utilisateur.identifiant}"></td>
+                <td th:text="${#numbers.formatDecimal(l.total, 1, 'WHITESPACE', 0, 'COMMA')} + ' F'"></td>
+                <td><a th:href="@{/livraisons/{id}(id=${l.id})}">Détail</a></td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(livraisons)}"><td colspan="6">Aucune livraison enregistrée</td></tr>
+            </tbody>
+        </table>
+        <a class="btn" th:href="@{/livraisons/nouveau}">Nouvelle livraison</a>
+    </div>
+</main>
+</body>
+</html>

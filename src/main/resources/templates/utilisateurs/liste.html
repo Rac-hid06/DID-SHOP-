@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Utilisateurs</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<main>
+    <div class="card">
+        <h2>Utilisateurs</h2>
+        <p class="succes" th:if="${succes}" th:text="${succes}"></p>
+        <table>
+            <thead>
+            <tr><th>Matricule</th><th>Nom</th><th>Prénom</th><th>Sexe</th><th>Naissance</th><th>Identifiant</th><th>Rôle</th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="u : ${utilisateurs}">
+                <td th:text="${u.matricule}"></td>
+                <td th:text="${u.nom}"></td>
+                <td th:text="${u.prenom}"></td>
+                <td th:text="${u.sexe}"></td>
+                <td th:text="${#temporals.format(u.dateNaissance, 'dd/MM/yyyy')}"></td>
+                <td th:text="${u.identifiant}"></td>
+                <td th:text="${u.role}"></td>
+            </tr>
+            </tbody>
+        </table>
+        <a class="btn" th:href="@{/utilisateurs/nouveau}">Ajouter un utilisateur</a>
+    </div>
+</main>
+</body>
+</html>

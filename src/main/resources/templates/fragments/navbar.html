@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+<nav th:fragment="navbar">
+    <strong><a th:href="@{/}">Boutique</a></strong>
+    <a th:href="@{/achats/nouveau}">Caisse</a>
+    <a th:href="@{/achats}">Achats</a>
+    <a th:href="@{/produits}">Produits</a>
+    <a th:href="@{/livraisons}" sec:authorize="hasRole('GERANT')">Livraisons</a>
+    <a th:href="@{/fournisseurs}" sec:authorize="hasRole('GERANT')">Fournisseurs</a>
+    <a th:href="@{/categories}" sec:authorize="hasRole('GERANT')">Catégories</a>
+    <a th:href="@{/utilisateurs}" sec:authorize="hasRole('GERANT')">Utilisateurs</a>
+    <span class="spacer"></span>
+    <span sec:authentication="name"></span>
+    <form th:action="@{/logout}" method="post"><button type="submit">Déconnexion</button></form>
+</nav>
+</body>
+</html>

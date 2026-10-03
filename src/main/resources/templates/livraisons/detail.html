@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Détail de la livraison</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<main>
+    <div class="card">
+        <h2>Livraison n° <span th:text="${livraison.id}"></span></h2>
+        <p>
+            Date : <span th:text="${#temporals.format(livraison.dateLivraison, 'dd/MM/yyyy HH:mm')}"></span><br>
+            Fournisseur : <strong th:text="${livraison.fournisseur.nom}"></strong><br>
+            Enregistrée par : <span th:text="${livraison.utilisateur.identifiant}"></span>
+        </p>
+        <table>
+            <thead><tr><th>Produit</th><th>Qté</th><th>Prix d'achat</th><th>Sous-total</th></tr></thead>
+            <tbody>
+            <tr th:each="l : ${livraison.lignes}">
+                <td th:text="${l.produit.nom}"></td>
+                <td th:text="${l.quantite}"></td>
+                <td th:text="${#numbers.formatDecimal(l.prixUnitaire, 1, 'WHITESPACE', 0, 'COMMA')} + ' F'"></td>
+                <td th:text="${#numbers.formatDecimal(l.sousTotal, 1, 'WHITESPACE', 0, 'COMMA')} + ' F'"></td>
+            </tr>
+            </tbody>
+        </table>
+        <h3>Total : <span th:text="${#numbers.formatDecimal(livraison.total, 1, 'WHITESPACE', 0, 'COMMA')}"></span> F</h3>
+        <a class="btn" th:href="@{/livraisons}">Retour à l'historique</a>
+    </div>
+</main>
+</body>
+</html>

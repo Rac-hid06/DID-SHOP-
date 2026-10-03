@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Nouvelle livraison</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<main>
+    <div class="card">
+        <h2>Nouvelle livraison</h2>
+        <p class="erreur" th:if="${erreur}" th:text="${erreur}"></p>
+        <p th:if="${#lists.isEmpty(fournisseurs)}" class="erreur">
+            Aucun fournisseur : <a th:href="@{/fournisseurs}">ajoutez-en un</a> d'abord.
+        </p>
+        <form th:action="@{/livraisons}" method="post">
+            <label>Fournisseur</label>
+            <select name="fournisseurId" required>
+                <option value="">-- Choisir --</option>
+                <option th:each="f : ${fournisseurs}" th:value="${f.id}" th:text="${f.nom}"
+                        th:selected="${fournisseurId != null and fournisseurId == f.id}"></option>
+            </select>
+
+            <div id="lignes">
+                <div class="ligne" th:each="l : ${lignes}" style="display:flex; gap:8px; align-items:flex-end">
+                    <div style="flex:3">
+                        <label>Produit</label>
+                        <select name="produitId" required>
+                            <option value="">-- Choisir --</option>
+                            <option th:each="p : ${produits}" th:value="${p.id}"
+                                    th:selected="${l.produitId != null and l.produitId == p.id}"
+                                    th:text="${p.nom + ' (stock : ' + p.stock + ')'}"></option>
+                        </select>
+                    </div>
+                    <div style="flex:1">
+                        <label>Qté</label>
+                        <input type="number" name="quantite" min="1" th:value="${l.quantite}" required>
+                    </div>
+                    <div style="flex:2">
+                        <label>Prix d'achat unitaire</label>
+                        <input type="number" name="prixUnitaire" min="0" step="any" th:value="${l.prixUnitaire}" required>
+                    </div>
+                    <button type="button" class="btn" style="background:#b00020" onclick="retirer(this)">✕</button>
+                </div>
+            </div>
+
+            <button type="button" class="btn" style="background:#6b7785" onclick="ajouter()">+ Ajouter un produit</button>
+            <h3>Total : <span id="total">0</span> F</h3>
+            <button class="btn" type="submit">Enregistrer la livraison</button>
+        </form>
+    </div>
+</main>
+<script>
+    const lignes = document.getElementById('lignes');
+    function recalc() {
+        let total = 0;
+        lignes.querySelectorAll('.ligne').forEach(function (r) {
+            const qte = parseInt(r.querySelector('input[name=quantite]').value) || 0;
+            const prix = parseFloat(r.querySelector('input[name=prixUnitaire]').value) || 0;
+            total += qte * prix;
+        });
+        document.getElementById('total').textContent = Math.round(total).toLocaleString('fr-FR');
+    }
+    function ajouter() {
+        const r = lignes.querySelector('.ligne').cloneNode(true);
+        r.querySelector('select').selectedIndex = 0;
+        r.querySelector('input[name=quantite]').value = 1;
+        r.querySelector('input[name=prixUnitaire]').value = '';
+        lignes.appendChild(r);
+        recalc();
+    }
+    function retirer(btn) {
+        if (lignes.querySelectorAll('.ligne').length > 1) {
+            btn.closest('.ligne').remove();
+            recalc();
+        }
+    }
+    lignes.addEventListener('input', recalc);
+    lignes.addEventListener('change', recalc);
+    recalc();
+</script>
+</body>
+</html>

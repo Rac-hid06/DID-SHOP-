@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Fournisseurs</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<main>
+    <div class="card">
+        <h2>Fournisseurs (grossistes)</h2>
+        <p class="succes" th:if="${succes}" th:text="${succes}"></p>
+        <p class="erreur" th:if="${erreur}" th:text="${erreur}"></p>
+        <form th:action="@{/fournisseurs}" method="post">
+            <label>Nom</label>
+            <input type="text" name="nom" required>
+            <label>Téléphone</label>
+            <input type="text" name="telephone">
+            <label>Adresse</label>
+            <input type="text" name="adresse">
+            <button class="btn" type="submit">Ajouter</button>
+        </form>
+        <table style="margin-top:16px">
+            <thead><tr><th>Nom</th><th>Téléphone</th><th>Adresse</th></tr></thead>
+            <tbody>
+            <tr th:each="f : ${fournisseurs}">
+                <td th:text="${f.nom}"></td>
+                <td th:text="${f.telephone != null ? f.telephone : '-'}"></td>
+                <td th:text="${f.adresse != null ? f.adresse : '-'}"></td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(fournisseurs)}"><td colspan="3">Aucun fournisseur</td></tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+</body>
+</html>

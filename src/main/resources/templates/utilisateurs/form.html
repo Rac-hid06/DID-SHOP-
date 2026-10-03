@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Nouvel utilisateur</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<main>
+    <div class="card">
+        <h2>Nouvel utilisateur</h2>
+        <form th:action="@{/utilisateurs}" th:object="${utilisateur}" method="post">
+            <label>Nom</label>
+            <input type="text" th:field="*{nom}">
+            <span class="erreur" th:if="${#fields.hasErrors('nom')}" th:errors="*{nom}"></span>
+
+            <label>Prénom</label>
+            <input type="text" th:field="*{prenom}">
+            <span class="erreur" th:if="${#fields.hasErrors('prenom')}" th:errors="*{prenom}"></span>
+
+            <label>Numéro matricule</label>
+            <input type="text" th:field="*{matricule}">
+            <span class="erreur" th:if="${#fields.hasErrors('matricule')}" th:errors="*{matricule}"></span>
+
+            <label>Sexe</label>
+            <select th:field="*{sexe}">
+                <option value="">-- Choisir --</option>
+                <option value="M">Masculin</option>
+                <option value="F">Féminin</option>
+            </select>
+            <span class="erreur" th:if="${#fields.hasErrors('sexe')}" th:errors="*{sexe}"></span>
+
+            <label>Date de naissance</label>
+            <input type="date" th:field="*{dateNaissance}">
+            <span class="erreur" th:if="${#fields.hasErrors('dateNaissance')}" th:errors="*{dateNaissance}"></span>
+
+            <label>Identifiant</label>
+            <input type="text" th:field="*{identifiant}">
+            <span class="erreur" th:if="${#fields.hasErrors('identifiant')}" th:errors="*{identifiant}"></span>
+
+            <label>Mot de passe</label>
+            <input type="password" th:field="*{motDePasse}">
+            <span class="erreur" th:if="${#fields.hasErrors('motDePasse')}" th:errors="*{motDePasse}"></span>
+
+            <label>Rôle</label>
+            <select th:field="*{role}">
+                <option th:each="r : ${roles}" th:value="${r}" th:text="${r}"></option>
+            </select>
+
+            <button class="btn" type="submit">Enregistrer</button>
+            <a class="btn" th:href="@{/utilisateurs}" style="background:#6b7785">Annuler</a>
+        </form>
+    </div>
+</main>
+</body>
+</html>

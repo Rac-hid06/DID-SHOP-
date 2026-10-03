@@ -1,0 +1,35 @@
+* { box-sizing: border-box; }
+body { font-family: system-ui, sans-serif; margin: 0; background: #f4f6f8; color: #222; }
+nav { background: #276749; color: #fff; padding: 12px 20px; display: flex; gap: 16px; align-items: center; }
+nav a { color: #fff; text-decoration: none; }
+nav .spacer { flex: 1; }
+nav form { margin: 0; }
+nav button { background: transparent; border: 1px solid #fff; color: #fff; padding: 4px 10px; border-radius: 4px; cursor: pointer; }
+main { max-width: 900px; margin: 24px auto; padding: 0 16px; }
+.card { background: #fff; border-radius: 8px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,.1); }
+table { width: 100%; border-collapse: collapse; }
+th, td { text-align: left; padding: 8px; border-bottom: 1px solid #e3e6ea; }
+label { display: block; margin-top: 12px; font-weight: 600; }
+input, select { width: 100%; padding: 8px; margin-top: 4px; border: 1px solid #c4c9d0; border-radius: 4px; }
+.btn { display: inline-block; background: #276749; color: #fff; padding: 8px 14px; border: 0; border-radius: 4px; text-decoration: none; cursor: pointer; margin-top: 16px; }
+.erreur { color: #b00020; font-size: .9em; }
+.succes { background: #e3f6e8; color: #1b6b32; padding: 10px; border-radius: 4px; margin-bottom: 12px; }
+.login-box { max-width: 360px; margin: 80px auto; }
+
+/* Ticket de caisse */
+.ticket { max-width: 320px; margin: 0 auto; background: #fff; padding: 16px; font-family: monospace; box-shadow: 0 1px 4px rgba(0,0,0,.1); }
+.ticket hr { border: 0; border-top: 1px dashed #888; }
+.ticket-table td { border: 0; padding: 3px 0; }
+@media print {
+    nav, .no-print { display: none !important; }
+    body { background: #fff; }
+    main { margin: 0; padding: 0; max-width: none; }
+    .ticket { box-shadow: none; margin: 0; max-width: 100%; }
+}
+
+/* Tableau de bord */
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+.stat { background: #fff; border-radius: 8px; padding: 16px; box-shadow: 0 1px 4px rgba(0,0,0,.1); }
+.stat-label { color: #6b7785; font-size: .9em; }
+.stat-value { font-size: 1.6em; font-weight: 700; margin-top: 4px; }
+.stat-value.alerte { color: #b00020; }

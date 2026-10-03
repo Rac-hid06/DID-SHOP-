@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Produits</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+<main>
+    <div class="card">
+        <h2>Produits</h2>
+        <p class="succes" th:if="${succes}" th:text="${succes}"></p>
+        <form th:action="@{/produits}" method="get" style="display:flex; gap:8px">
+            <input type="text" name="q" th:value="${q}" placeholder="Rechercher un produit par nom...">
+            <button class="btn" type="submit" style="margin-top:4px">Rechercher</button>
+        </form>
+        <table style="margin-top:16px">
+            <thead>
+            <tr><th>Nom</th><th>Catégorie</th><th>Prix de vente</th><th>Stock</th><th sec:authorize="hasRole('GERANT')"></th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="p : ${produits}">
+                <td th:text="${p.nom}"></td>
+                <td th:text="${p.categorie != null ? p.categorie.nom : '-'}"></td>
+                <td th:text="${#numbers.formatDecimal(p.prixVente, 1, 'WHITESPACE', 0, 'COMMA')} + ' F'"></td>
+                <td>
+                    <span th:text="${p.stock}"></span>
+                    <span class="erreur" th:if="${p.stockFaible}">⚠ stock faible</span>
+                </td>
+                <td sec:authorize="hasRole('GERANT')"><a th:href="@{/produits/{id}/modifier(id=${p.id})}">Modifier</a></td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(produits)}"><td colspan="5">Aucun produit trouvé</td></tr>
+            </tbody>
+        </table>
+        <a class="btn" th:href="@{/produits/nouveau}" sec:authorize="hasRole('GERANT')">Ajouter un produit</a>
+    </div>
+</main>
+</body>
+</html>
